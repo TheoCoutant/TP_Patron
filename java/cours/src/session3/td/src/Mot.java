@@ -1,7 +1,7 @@
 import java.util.Iterator;
 
 /**
- * Mot ::= Vide | suivi(Character, Mot) | concatenation(Mot, Mot)
+ * Mot ::= Viide | suivi(Character, Mot) | concatenation(Mot, Mot)
  */
 
 public interface Mot extends Iterable<Character> {
@@ -27,4 +27,10 @@ public interface Mot extends Iterable<Character> {
 
     default Iterateur iterateur() { return new Iterateur(this);}
     default Iterator<Character> iterator() { return this.iterateur();}
+
+    default <T> T accueil(Visiteur<T> v) {
+        if (this.estVide())
+            return v.casVide();
+        return v.casCons(this.lettre(), this.reste().accueil(v));
+    }
 }
