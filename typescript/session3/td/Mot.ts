@@ -1,18 +1,17 @@
 import { Vide } from "./Vide"
-import { Cons } from "./Cons"
-import { Union } from "./Union"
+import { ConsRec } from "./ConsRec"
+import { ConsIter } from "./ConsIter"
+import { UnionRec } from "./UnionRec"
+import { UnionIter } from "./UnionIter"
 import { Iterateur } from "./Iterateur"
-import { Visiteur } from "./Visiteur"
+import { Visiteur } from "./Visiteur";
+
 
 /**
- * Mot ::= Vide | suivi(Character, Mot) | concatenation(Mot, Mot)
+ * Mot ::= Vide | Cons(Character, Mot) | Union(Mot, Mot)
  */
 
-export abstract class Mot implements Iterable<String> {
-
-	[Symbol.iterator](): Iterator<any>{
-		return this.iterateur();
-	}
+export abstract class Mot implements Iterable<string> {
 
 	// Selecteurs
     public casVide() : boolean { 
@@ -29,19 +28,19 @@ export abstract class Mot implements Iterable<String> {
 
     // Projecteurs
 	public lettre() : string {
-		throw new Error();
+		throw Error("Unsupported operation");
     }
     
 	public reste() : Mot {
-		throw new Error();
+		throw Error("Unsupported operation");
     }
     
 	public gauche() : Mot{
-		throw new Error();
+		throw Error("Unsupported operation");
     }
     
 	public droit() : Mot{
-		throw new Error();
+		throw Error("Unsupported operation");
     }
 
     // Fabriques
@@ -49,12 +48,20 @@ export abstract class Mot implements Iterable<String> {
 		return Vide.SINGLETON; 
     }
     
-	public cons(n : string) : Mot {
-		return new Cons(n, this);
+	public consRec(n : string) : Mot {
+		return new ConsRec(n, this);
+	}
+	
+	public consIter(n : string) : Mot {
+		return new ConsIter(n, this);
     }
     
-	public union(ens : Mot){
-		return new Union(this, ens);
+	public unionRec(ens : Mot){
+		return new UnionRec(this, ens);
+	}
+
+	public unionIter(ens : Mot){
+		return new UnionIter(this, ens);
 	}
     
     // Autres accesseurs
@@ -67,70 +74,17 @@ export abstract class Mot implements Iterable<String> {
 	public iterateur() : Iterateur {
 		return new Iterateur(this);
 	}
-	 	
-	public iterator() : Iterator<string> {
+
+	[Symbol.iterator](): Iterator<string>{
 		return this.iterateur();
 	}
 
-	// Visiteur itératif (programmé récursivement puis itérativement)
-	// public accueilRecursif(v : Visiteur<T>) : <T> T {
-	// 	if (this.estVide()) {
-	// 		return v.casVide();
-	// 	}
-	// 	return v.casCons(this.lettre(), 
-	// 			this.reste().accueilRecursif(v));
-	// }
-
-	public accueil<T>(v : Visiteur<T>) : T {
+	public accept<T>(v : Visiteur<T>) : T {
 		var r : T = v.casVide();
-
-		var current : Mot = this;
-		while(!this.estVide()){
-			r = v.casCons(this.lettre(),r);
-			current=this.reste();
+		for(var x of this) {
+			r = v.casCons(x, r);
 		}
 		return r;
 	}
-
-	// // Visiteur itératif avec des lambda-expressions
-	// public accueilRecursif(casVide : Supplier<T>, casCons : BiFunction<Integer, T, T>) : <T> T {
-	// 	if (this.estVide()) {
-	// 		return casVide.get();
-	// 	}
-	// 	return casCons.apply(this.element(), this.reste().accueilRecursif(casVide, casCons));
-	// }
-
-	// public accueil(casVide : Supplier<T>, casCons : BiFunction<Integer, T, T>) :  <T> T {
-	// 	T r = casVide.get();
-	// 	for (int x : this) {
-	// 		r = casCons.apply(x, r);
-	// 	}
-	// 	return r;
-	// }
-
-	// // Visiteur récursif primitif analogue du filtrage par cas (pattern matching),
-	// // programmé récursivement
-	// public filtrageRécursif(casVide : Supplier<T>, casCons : BiFunction<Integer, Ensemble4, T>) : <T> T {
-	// 	if (this.estVide()) {
-	// 		return casVide.get();
-	// 	}
-	// 	return casCons.apply(this.lettre(), this.reste());
-	// }
-
-	// // Visiteur récursif primitif analogue du filtrage par cas (pattern matching),
-	// // programmé itérativement
-	// public filtrage(casVide : Supplier<T>, casCons : BiFunction<Integer, Ensemble4, Function<T, T>>) :  <T> T {
-	// 	T r = casVide.get();
-	// 	Ensemble4 arg = this.vide();
-	// 	Ensemble4 courant = this;
-	// 	while (!courant.estVide()) {
-	// 		int e = courant.lettre();
-	// 		r = casCons.apply(e, arg).apply(r);
-	// 		arg = arg.cons(e);
-	// 		courant = courant.reste();
-	// 	}
-	// 	return r;
-	// }
-
 }
 

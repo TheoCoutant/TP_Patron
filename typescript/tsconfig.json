@@ -14,7 +14,8 @@
             "es6"
         ],
         "strictNullChecks": true,
-        "jsx": "react"
+        "jsx": "react",
+        "downlevelIteration": true
     },
     "exclude": [
         "./node_modules"

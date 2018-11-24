@@ -1,9 +1,9 @@
 import { Mot } from "./Mot"
 
-export class Cons extends Mot {
-    var_lettre : string;
-    var_reste : Mot;
-    var_taille : number;
+export class ConsRec extends Mot {
+    private var_lettre : string;
+    private var_reste : Mot;
+    private var_taille : number;
 
     public constructor(lettre : string, reste : Mot) {
         super();

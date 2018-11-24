@@ -1,14 +1,15 @@
-import { Mot } from "./Mot"
+import {Mot} from './Mot'
 
 export class Vide extends Mot {
-    public static SINGLETON : Vide;
+
+    public static SINGLETON = new Vide();
+
+    private constructor() {
+        super();
+    }
 
     public casVide() : boolean {
         return true;
-    }
-
-    public toString() : string {
-        return "";
     }
 
     public taille() : number {

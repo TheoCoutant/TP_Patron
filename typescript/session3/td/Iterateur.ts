@@ -1,7 +1,7 @@
 import { Mot } from "./Mot"
 import { Vide } from "./Vide"
 
-export class Iterateur implements Iterator<String> {
+export class Iterateur implements IterableIterator<string> {
     private var_reste : Mot;
     private var_lettre : string;
 
@@ -25,11 +25,11 @@ export class Iterateur implements Iterator<String> {
                     mot = mot.droit();
                     continue;
                 } else if(mot.gauche().casCons()) {
-                    this.var_reste = mot.gauche().reste().union(mot.droit());
+                    this.var_reste = mot.gauche().reste().unionIter(mot.droit());
                     this.var_lettre = mot.gauche().lettre();
                     continue;
                 } else {
-                    mot = mot.gauche().gauche().union(mot.gauche().droit().union(mot.droit()));
+                    mot = mot.gauche().gauche().unionIter(mot.gauche().droit().unionIter(mot.droit()));
                     continue;
                 }
             }
@@ -38,13 +38,9 @@ export class Iterateur implements Iterator<String> {
 
     public reste() : Mot {
         if (this.var_reste.casVide()) {
-            throw new Error();
+            throw Error("Unsupported operation");
         }
         return this.var_reste;
-    }
-
-    public aSuivant() : boolean {
-        return this.var_reste.casVide();
     }
     
     public suivant() : string {
@@ -55,14 +51,14 @@ export class Iterateur implements Iterator<String> {
         return c;
     }
 
-    public hasNext() : boolean {
-        return this.aSuivant();
-    }
-
     public next() : IteratorResult<string> {
         return {
             done : false,
             value : this.suivant()
         }
+    }
+
+    [Symbol.iterator](): IterableIterator<string> {
+        return this;
     }
 }
