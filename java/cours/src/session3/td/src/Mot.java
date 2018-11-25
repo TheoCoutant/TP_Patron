@@ -7,17 +7,16 @@ import java.util.Iterator;
 public interface Mot extends Iterable<Character> {
     // Sélecteurs
     default boolean casVide() { return false; }
-    default boolean casPrecedeParCaractere() { return false; }
-    default boolean casConcatenationMot() { return false; }
+    default boolean casCons() { return false; }
+    default boolean casUnion() { return false; }
     // Fabriques
-    default Mot creerMotVideIteratif() { return MotVideIteratif.SINGLETON; }
-    default Mot creerMotPrecedeCararactereIteratif(char c) { return new MotCaractereIteratif(c, this);}
-    default Mot creerMotConcatenationIteratif(Mot motAAjouter) {return new MotConcatIteratif(this, motAAjouter);}
-    default Mot creerMotVideRecursif() { return MotVideRecursif.SINGLETON; }
-    default Mot creerMotPrecedeCararactereRecursif(char c) { return new MotCaractereRecursif(c, this);}
-    default Mot creerMotConcatenationRecursif(Mot motAAjouter) {return new MotConcatRecursif(this, motAAjouter);}
+    default Mot vide() { return Vide.SINGLETON;   }
+    default Mot consIter(char c) { return new ConsIter(c, this);}
+    default Mot unionIter(Mot motAAjouter) {return new UnionIter(this, motAAjouter);}
+    default Mot consRec(char c) { return new ConsRec(c, this);}
+    default Mot unionRec(Mot motAAjouter) {return new UnionRec(this, motAAjouter);}
     // Projecteurs
-    default char caractere() {	throw new UnsupportedOperationException(); }
+    default char lettre() {	throw new UnsupportedOperationException(); }
     default Mot reste() { throw new UnsupportedOperationException(); }
     default Mot gauche() { throw new UnsupportedOperationException(); }
     default Mot droit() { throw new UnsupportedOperationException(); }
@@ -31,10 +30,18 @@ public interface Mot extends Iterable<Character> {
     default Iterateur iterateur() { return new Iterateur(this);}
     default Iterator<Character> iterator() { return this.iterateur();}
 
-    default <T> T acceptRecursif(VisiteurMot<T> v) {
+    default <T> T acceptRecursif(Visiteur<T> v) {
         if (this.estVide())
-            return v.estVide();
-        return v.estPrecedeParCaractere(this.caractere(), this.reste().acceptRecursif(v));
+            return v.casVide();
+        return v.casCons(this.lettre(), this.reste().acceptRecursif(v));
+    }
+
+    default <T> T accept(Visiteur<T> v) {
+        T r = v.casVide();
+        for(Character c : this) {
+            r = v.casCons(c, r);
+        }
+        return r;
     }
 }
 

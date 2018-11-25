@@ -1,9 +1,9 @@
-public class MotConcatRecursif implements Mot{
+public class UnionRec implements Mot{
     private Mot gauche;
     private Mot droit;
     private int taille;
 
-    MotConcatRecursif(Mot gauche, Mot droit) {
+    UnionRec(Mot gauche, Mot droit) {
         this.gauche = gauche;
         this.droit = droit;
         this.taille = gauche.taille() + droit.taille();
@@ -20,7 +20,7 @@ public class MotConcatRecursif implements Mot{
     }
 
     @Override
-    public boolean casConcatenationMot() {
+    public boolean casUnion() {
         return true;
     }
 
@@ -29,19 +29,23 @@ public class MotConcatRecursif implements Mot{
         return taille;
     }
 
+    public String toString() {
+        return gauche.toString() + droit.toString();
+    }
+
     @Override
-    public char caractere() {
+    public char lettre() {
         if(!gauche.estVide())
-            return this.gauche.caractere();
+            return this.gauche.lettre();
         if(!droit.estVide())
-            return this.droit.caractere();
+            return this.droit.lettre();
         throw new UnsupportedOperationException();
     }
 
     @Override
     public Mot reste() {
         if(!gauche.estVide())
-            return new MotConcatIteratif(this.gauche.reste(), this.droit);
+            return new UnionRec(this.gauche.reste(), this.droit);
         if(!droit.estVide())
             return this.droit.reste();
         throw new UnsupportedOperationException();
