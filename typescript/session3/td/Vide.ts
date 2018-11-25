@@ -4,10 +4,6 @@ export class Vide extends Mot {
 
     public static SINGLETON = new Vide();
 
-    private constructor() {
-        super();
-    }
-
     public casVide() : boolean {
         return true;
     }

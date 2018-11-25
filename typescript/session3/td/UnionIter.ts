@@ -3,11 +3,13 @@ import { Mot } from "./Mot"
 export class UnionIter extends Mot {
     private motGauche : Mot;
     private motDroit : Mot;
+    private var_taille : number;
 
     public constructor(motGauche : Mot, motDroit : Mot) {
         super();
         this.motGauche = motGauche;
         this.motDroit = motDroit;
+        this.var_taille = motGauche.taille() + motDroit.taille();
     }
 
     public casUnion() : boolean {
@@ -23,24 +25,12 @@ export class UnionIter extends Mot {
     }
 
     public taille() : number {
-        var var_taille : number = 0;
-        var motGaucheTmp = this.motGauche;
-        var motDroitTmp = this.motGauche;
-        while (motGaucheTmp.casVide()) {
-            var_taille += 1;
-            motGaucheTmp = motGaucheTmp.reste();
-        }
-
-        while (motDroitTmp.casVide()) {
-            var_taille += 1;
-            motDroitTmp = motDroitTmp.reste();
-        }
-        return var_taille;
+        return this.var_taille;
     }
 
     public lettre(): string {
         var i = this.iterateur();
-        return i.suivant();
+        return i.next().value;
     }
 
     public reste(): Mot {

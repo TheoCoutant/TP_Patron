@@ -25,7 +25,7 @@ export class ConsIter extends Mot {
 
     public taille() : number {
         while(this.casVide()) {
-            this.var_taille += 1;
+            this.var_taille++;
         }
         return this.var_taille;
     }
