@@ -7,14 +7,17 @@ import java.util.Iterator;
 public interface Mot extends Iterable<Character> {
     // Sélecteurs
     default boolean casVide() { return false; }
-    default boolean casCons() { return false; }
-    default boolean casUnion() { return false; }
+    default boolean casPrecedeParCaractere() { return false; }
+    default boolean casConcatenationMot() { return false; }
     // Fabriques
-    default Mot vide() { return Vide.SINGLETON; }
-    default Mot cons(char c) { return new Cons(c, this);}
-    default Mot union(Mot motAAjouter) {return new Union(this, motAAjouter);}
+    default Mot creerMotVideIteratif() { return MotVideIteratif.SINGLETON; }
+    default Mot creerMotPrecedeCararactereIteratif(char c) { return new MotCaractereIteratif(c, this);}
+    default Mot creerMotConcatenationIteratif(Mot motAAjouter) {return new MotConcatIteratif(this, motAAjouter);}
+    default Mot creerMotVideRecursif() { return MotVideRecursif.SINGLETON; }
+    default Mot creerMotPrecedeCararactereRecursif(char c) { return new MotCaractereRecursif(c, this);}
+    default Mot creerMotConcatenationRecursif(Mot motAAjouter) {return new MotConcatRecursif(this, motAAjouter);}
     // Projecteurs
-    default char lettre() {	throw new UnsupportedOperationException(); }
+    default char caractere() {	throw new UnsupportedOperationException(); }
     default Mot reste() { throw new UnsupportedOperationException(); }
     default Mot gauche() { throw new UnsupportedOperationException(); }
     default Mot droit() { throw new UnsupportedOperationException(); }
@@ -28,9 +31,10 @@ public interface Mot extends Iterable<Character> {
     default Iterateur iterateur() { return new Iterateur(this);}
     default Iterator<Character> iterator() { return this.iterateur();}
 
-    default <T> T accueil(Visiteur<T> v) {
+    default <T> T acceptRecursif(VisiteurMot<T> v) {
         if (this.estVide())
-            return v.casVide();
-        return v.casCons(this.lettre(), this.reste().accueil(v));
+            return v.estVide();
+        return v.estPrecedeParCaractere(this.caractere(), this.reste().acceptRecursif(v));
     }
 }
+

@@ -1,11 +1,35 @@
-import java.util.Iterator;
+public class MotConcatIteratif implements Mot{
+    private Mot gauche;
+    private Mot droit;
+    private int taille;
 
-public class Iterateur implements Iterator<Character> {
-    private Mot reste;
     private char caractere;
+    private Mot reste;
 
-    public Iterateur(Mot mot) {
-        decomposer(mot);
+    MotConcatIteratif(Mot gauche, Mot droit) {
+        this.gauche = gauche;
+        this.droit = droit;
+        this.taille = gauche.taille() + droit.taille();
+    }
+
+    @Override
+    public Mot gauche() {
+        return gauche;
+    }
+
+    @Override
+    public Mot droit() {
+        return droit;
+    }
+
+    @Override
+    public boolean casConcatenationMot() {
+        return true;
+    }
+
+    @Override
+    public int taille() {
+        return taille;
     }
 
     private void decomposer(Mot mot) {
@@ -35,29 +59,13 @@ public class Iterateur implements Iterator<Character> {
         }
     }
 
+    @Override
+    public char caractere() {
+        return caractere;
+    }
+
+    @Override
     public Mot reste() {
-        if(reste == null)
-            throw new UnsupportedOperationException();
-        return this.reste;
-    }
-
-    public boolean aSuivant() {
-        return reste != null;
-    }
-    @Override
-    public boolean hasNext() {
-        return this.aSuivant();
-    }
-
-    public char suivant() {
-        if(reste == null)
-            throw new UnsupportedOperationException();
-        char c = caractere;
-        decomposer(reste);
-        return c;
-    }
-    @Override
-    public Character next() {
-        return this.suivant();
+        return reste;
     }
 }
