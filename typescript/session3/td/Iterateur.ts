@@ -1,60 +1,59 @@
 import { Mot } from "./Mot"
-import { Vide } from "./Vide"
 
 export class Iterateur implements IterableIterator<string> {
-    private var_reste : Mot;
+    private var_reste : Mot | null;
     private var_lettre : string;
 
     public constructor(mot : Mot) {
         this.decomposer(mot);
     }
 
-    private decomposer(mot : Mot) {
-        while(true) {
-            if(mot.casVide()) {
-                this.var_reste = Vide.SINGLETON;
-                break;
-            }
-            if(mot.casCons()) {
-                this.var_reste = mot.reste();
-                this.var_lettre = mot.lettre();
-                break;
-            }
-            if(mot.casUnion()){
-                if(mot.gauche().casVide()) {
-                    mot = mot.droit();
-                    continue;
-                } else if(mot.gauche().casCons()) {
-                    this.var_reste = mot.gauche().reste().unionIter(mot.droit());
-                    this.var_lettre = mot.gauche().lettre();
-                    continue;
-                } else {
-                    mot = mot.gauche().gauche().unionIter(mot.gauche().droit().unionIter(mot.droit()));
-                    continue;
-                }
-            }
-        }
+    private decomposer(mot: Mot) {
+        while(true){
+			if(mot.estVide()){
+				this.var_reste = null;
+				break;
+			}
+			if(mot.casCons()){
+				this.var_reste = mot.reste();
+				this.var_lettre = mot.lettre();
+				break;
+			}
+			if(mot.casUnion()){
+				if(mot.gauche().estVide()){
+					mot = mot.droit();
+					continue;
+				}else if(mot.gauche().casCons()){
+					this.var_reste = mot.gauche().reste().unionIter(mot.droit());
+					this.var_lettre = mot.gauche().lettre();
+					break;
+				}else{
+					mot = mot.gauche().gauche().unionIter(mot.gauche().droit().unionIter(mot.droit()));
+					continue;
+				}
+			}
+		}
     }
 
     public reste() : Mot {
-        if (this.var_reste.casVide()) {
+        if (this.var_reste == null) {
             throw Error("Unsupported operation");
         }
         return this.var_reste;
     }
-    
-    public suivant() : string {
-        if(this.var_reste.casVide())
-            throw new Error();
-        var c : string = this.var_lettre;
-        this.decomposer(this.var_reste);
-        return c;
-    }
 
     public next() : IteratorResult<string> {
+		if (this.var_reste == null) {
+			return {
+                done: true,
+                value: "" 
+            }
+        }
+		var r = this.var_lettre;
+		this.decomposer(this.var_reste);
         return {
-            done : false,
-            value : this.suivant()
+            done: false,
+            value: r
         }
     }
 

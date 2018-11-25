@@ -1,15 +1,18 @@
 import { UnionIter } from './UnionIter';
 import { ConsIter } from './ConsIter';
 import { Mot } from "./Mot"
+import { Iterateur } from './Iterateur';
 
 export class UnionRec extends Mot {
     public motGauche : Mot;
     public motDroit : Mot;
+    public var_taille : number;
 
     public constructor(motGauche : Mot, motDroit : Mot) {
         super();
         this.motGauche = motGauche;
         this.motDroit = motDroit;
+        this.var_taille = motGauche.taille() + motDroit.taille();
     }
 
     public casUnion() : boolean {
@@ -25,24 +28,26 @@ export class UnionRec extends Mot {
     }
 
     public taille() : number {
-        return this.motGauche.taille() + this.motDroit.taille();
+        return this.var_taille;
     }
 
     public lettre() : string {
         if(!this.motGauche.estVide()) {
 			return this.motGauche.lettre();
         } else if(!this.motDroit.estVide()) {
-			return this.motDroit.lettre();
+            return this.motDroit.lettre();
         } else {
             throw Error("Unsupported operation");
-        }
+        }	
     }
 
     public reste(): Mot {
-        if(!this.motGauche.estVide())
+        if(!this.motGauche.estVide()) {
 			return new UnionIter(this.motGauche.reste(), this.motDroit);
-		if(!this.motDroit.estVide())
+        } else if(!this.motDroit.estVide()) {
 			return this.motDroit.reste();
-        throw Error("Unsupported operation");
+        } else {
+            throw Error("Unsupported operation");
+        }
     }
 }

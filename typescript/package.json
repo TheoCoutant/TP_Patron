@@ -9,7 +9,8 @@
         "tsc": "tsc",
         "webpack": "webpack",
         "build": "npm run tsc",
-        "tp1": "node build/session3/td/Test"
+        "tp1": "node build/session3/td/Test",
+        "tpr": "node build/session3/mots/Test"
     },
     "devDependencies": {
         "typescript": "^3.1.6"

@@ -1,21 +1,8 @@
-import { Vide } from "./Vide"
-import { ConsRec } from "./ConsRec"
-import { ConsIter } from "./ConsIter"
-import { UnionRec } from "./UnionRec"
-import { UnionIter } from "./UnionIter"
-import { Iterateur } from "./Iterateur"
-import { Visiteur } from "./Visiteur";
-
-
-/**
- * Mot ::= Vide | Cons(Character, Mot) | Union(Mot, Mot)
- */
-
 export abstract class Mot implements Iterable<string> {
 
 	// Selecteurs
     public casVide() : boolean { 
-        return false; 
+        return false;
     }
 
     public casCons() : boolean {
@@ -75,7 +62,7 @@ export abstract class Mot implements Iterable<string> {
 		return new Iterateur(this);
 	}
 
-	[Symbol.iterator](): Iterator<string>{
+	[Symbol.iterator](): Iterator<string> {
 		return this.iterateur();
 	}
 
@@ -86,5 +73,24 @@ export abstract class Mot implements Iterable<string> {
 		}
 		return r;
 	}
+
+	acceptRecursif<T>(v: Visiteur<T>): T {
+        if(this.casVide()){
+            return v.casVide();
+        }
+        return v.casCons(this.lettre(), this.reste().acceptRecursif(v));
+	}
+
+	public toString() {
+		return this.lettre() + this.reste();
+	}
 }
+
+import { Vide } from "./Vide"
+import { ConsRec } from "./ConsRec"
+import { ConsIter } from "./ConsIter"
+import { UnionRec } from "./UnionRec"
+import { UnionIter } from "./UnionIter"
+import { Iterateur } from "./Iterateur"
+import { Visiteur } from "./Visiteur"
 
