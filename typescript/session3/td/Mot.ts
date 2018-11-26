@@ -74,15 +74,38 @@ export abstract class Mot implements Iterable<string> {
 		return r;
 	}
 
-	acceptRecursif<T>(v: Visiteur<T>): T {
+	public acceptRecursif<T>(v: Visiteur<T>): T {
         if(this.casVide()){
             return v.casVide();
-        }
+		}
         return v.casCons(this.lettre(), this.reste().acceptRecursif(v));
 	}
 
-	public toString() {
-		return this.lettre() + this.reste();
+	public filtrage<T>(casVide: () => T, casCons : (string, Mot) => ((T) => T)): T {
+        var r: T = casVide();
+        var arg: Mot = this.vide();
+        var courant: Mot = this;
+        while (!courant.estVide()) {
+            var e: string = courant.lettre();
+            r = casCons(e, arg)(r);
+            arg = arg.consIter(e);
+            courant = courant.reste();
+        }
+        return r;
+	}
+
+    public filtrageRecursif<T> (casVide: () => T, casCons : (string, Mot) => T): T {
+        if(this.estVide()){
+            return casVide();
+        }
+        return casCons(this.lettre(), this.reste());
+	}
+
+	public representation(): string {
+        return this.filtrageRecursif(
+            () => "",
+            (lettre, reste) => lettre + this.reste().representation()
+        );
 	}
 }
 

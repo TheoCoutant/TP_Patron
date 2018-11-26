@@ -5,16 +5,16 @@ import { assembleurString } from '../../bibliotheque/assembleurChaine';
 import { CharAt } from './CharAt';
 import { Count } from './Count';
 
-var nbIteration = 10;
+var nbIteration = 10000;
 var motA = Vide.SINGLETON.consRec('A');
 var motB = Vide.SINGLETON.consRec('B');
 testRecursif(motA, nbIteration);
 testIteratif(motA, nbIteration);
 var motUnion = createMotUnion(motA, motB); //Mot ABABB
+console.log("Filtrage Recursif > chaine.representation() : ABABB ? " + motUnion.representation());
 testVisiteurCharAt(motUnion);
 testVisiteurLastOccurence(motUnion);
 testVisiteurCount(motUnion);
-
 
 function testRecursif(motA : Mot, nbIteration : number) {
     var mot = Vide.SINGLETON;
@@ -83,7 +83,7 @@ function testVisiteurCharAt(mot : Mot) {
 
 function testVisiteurLastOccurence(mot : Mot) {
     var lastOccurence = mot.acceptRecursif(new LastOccurence("B"));
-    console.log("Recursif (Chaine char inversée) > ABABB.lastOccurence('B') : 3 ? " + lastOccurence);
+    console.log("Recursif (Chaine char inversée) > BBABA.lastOccurence('B') : 3 ? " + lastOccurence);
     lastOccurence = mot.accept(new LastOccurence("B"));
     console.log("Iteratif > ABABB.lastOccurence('B') : 4 ? " + lastOccurence);
 }
