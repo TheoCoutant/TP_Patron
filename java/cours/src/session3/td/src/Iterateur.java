@@ -10,25 +10,25 @@ public class Iterateur implements Iterator<Character> {
 
     private void decomposer(Mot mot) {
         while(true) {
-            if(mot.casVide()) {
+            if(mot.estVide()) {
                 this.reste = null;
                 break;
             }
-            if(mot.casPrecedeParCaractere()) {
+            if(mot.casCons()) {
                 this.reste = mot.reste();
-                this.caractere = mot.caractere();
+                this.caractere = mot.lettre();
                 break;
             }
-            if(mot.casConcatenationMot()){
+            if(mot.casUnion()){
                 if(mot.gauche().casVide()) {
                     mot = mot.droit();
                     continue;
-                } else if(mot.gauche().casPrecedeParCaractere()) {
-                    this.reste = mot.gauche().reste().creerMotConcatenationIteratif(mot.droit());
-                    this.caractere = mot.gauche().caractere();
-                    continue;
+                } else if(mot.gauche().casCons()) {
+                    this.reste = mot.gauche().reste().unionIter(mot.droit());
+                    this.caractere = mot.gauche().lettre();
+                    break;
                 } else {
-                    mot = mot.gauche().gauche().creerMotConcatenationIteratif(mot.gauche().droit().creerMotConcatenationIteratif(mot.droit()));
+                    mot = mot.gauche().gauche().unionIter(mot.gauche().droit().unionIter(mot.droit()));
                     continue;
                 }
             }
@@ -51,7 +51,7 @@ public class Iterateur implements Iterator<Character> {
 
     public char suivant() {
         if(reste == null)
-            throw new UnsupportedOperationException();
+            return 0;
         char c = caractere;
         decomposer(reste);
         return c;

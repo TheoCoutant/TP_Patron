@@ -1,17 +1,17 @@
-public class MotCaractereIteratif implements Mot{
-    private char caractere;
+public class ConsIter implements Mot{
+    private char lettre;
     private Mot reste;
     private int taille;
 
-    MotCaractereIteratif(char caractere, Mot reste) {
-        this.caractere = caractere;
+    ConsIter(char lettre, Mot reste) {
+        this.lettre = lettre;
         this.reste = reste;
         this.taille =  reste.taille() + 1;
     }
 
     @Override
-    public char caractere() {
-        return caractere;
+    public char lettre() {
+        return lettre;
     }
 
     @Override
@@ -25,7 +25,11 @@ public class MotCaractereIteratif implements Mot{
     }
 
     @Override
-    public boolean casPrecedeParCaractere() {
+    public boolean casCons() {
         return true;
+    }
+
+    public String toString() {
+        return "" + lettre + reste.toString();
     }
 }
