@@ -1,28 +1,36 @@
-namespace variance {
+namespace varianceTP1 {
     class A { }
 
     class B extends A {
         f(): void { }
     }
 
-    function produireErreurParCovariance(b : Array<B>): Array<A> {
-        return b[0].f();
+    function produireErreurParCovariance(): void {
+       var b : Array<B> = new Array<B>();
+       var a : Array<A> = b;
+       a.push(new A());
+       b[0].f();
+        
     }
 
-    function produireErreurParContravariance(a : Array<A>): Array<B> {
-      return <Array<B>> a;
+    function produireErreurParContravariance(): void {
+        var a : Array<A> = new Array<A>();
+        a.push(new A());
+        var b : Array<B> = <Array<B>>a;
+        b[0].f();
     }
 
-    var a : Array<A> = new Array<A>(new A());
-    var b : Array<B> = new Array<B>(new B());
+    var a = new Array<A>();
+    var b = new Array<B>();
     try {
-        produireErreurParContravariance(a);
+        produireErreurParContravariance();
     } catch (e) {
         console.log(e);
     }
     console.log("********************************************************");
+    
     try {
-        produireErreurParCovariance(b);
+        produireErreurParCovariance();
     } catch (e) {
         console.log(e);
     }
